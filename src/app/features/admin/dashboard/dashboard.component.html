@@ -1,0 +1,29 @@
+<div class="page-header">
+  <h1>Admin Dashboard</h1>
+  <span class="subtitle">Platform Overview</span>
+</div>
+
+<div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
+
+<div *ngIf="!loading && stats" class="kpi-grid">
+  <mat-card *ngFor="let kpi of kpis" class="kpi-card">
+    <mat-card-content>
+      <div class="kpi-icon" [style.background]="kpi.color + '22'">
+        <mat-icon [style.color]="kpi.color">{{ kpi.icon }}</mat-icon>
+      </div>
+      <div class="kpi-info">
+        <div class="kpi-value">{{ stats[kpi.key] | number }}</div>
+        <div class="kpi-label">{{ kpi.label }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<mat-card class="revenue-card" *ngIf="!loading && stats">
+  <mat-card-header>
+    <mat-card-title><mat-icon>payments</mat-icon> Total Revenue</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="revenue-amount">৳ {{ stats.totalRevenue | number:'1.2-2' }}</div>
+  </mat-card-content>
+</mat-card>

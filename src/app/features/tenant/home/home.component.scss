@@ -1,0 +1,24 @@
+.page-container { padding: 24px; }
+.filter-card { margin-bottom: 20px; }
+.filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; mat-form-field { width: 100%; } }
+.filter-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+.results-header { margin-bottom: 16px; color: #666; }
+.loading { display: flex; justify-content: center; padding: 60px; }
+.properties-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+.property-card {
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  &:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+}
+.property-image {
+  height: 180px; background: #e0e0e0 center/cover no-repeat; position: relative; display: flex; align-items: flex-end; padding: 8px;
+  .no-photo { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; mat-icon { font-size: 48px; color: #bbb; } }
+  .type-chip { background: rgba(0,0,0,0.6); color: white; font-size: 11px; height: 22px; }
+  .boost-chip { margin-left: 4px; font-size: 11px; height: 22px; }
+}
+mat-card-content {
+  h3 { margin: 12px 0 4px; font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .location { display: flex; align-items: center; gap: 4px; color: #666; font-size: 0.85rem; margin: 0; mat-icon { font-size: 14px; height: 14px; } }
+}
+.property-meta { display: flex; gap: 12px; margin: 8px 0; color: #666; font-size: 0.8rem; span { display: flex; align-items: center; gap: 4px; mat-icon { font-size: 14px; } } }
+.price-row { display: flex; align-items: center; justify-content: space-between; .price { font-size: 1.1rem; font-weight: 700; color: #1976d2; } .negotiable { font-size: 0.75rem; color: #4caf50; background: #e8f5e9; padding: 2px 8px; border-radius: 12px; } }
+.empty-state { grid-column: 1/-1; text-align: center; padding: 60px; color: #888; mat-icon { font-size: 64px; height: 64px; width: 64px; } }

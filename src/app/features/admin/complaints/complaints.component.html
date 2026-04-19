@@ -1,0 +1,44 @@
+<div class="page-header"><h1>Complaints & Disputes</h1></div>
+<mat-card>
+  <mat-card-content>
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by Status</mat-label>
+        <mat-select [(ngModel)]="filterStatus" (ngModelChange)="page=0; load()">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="loading" class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+    <mat-table [dataSource]="complaints" *ngIf="!loading">
+      <ng-container matColumnDef="type"><mat-header-cell *matHeaderCellDef>Type</mat-header-cell><mat-cell *matCellDef="let c"><mat-chip>{{ c.complaintType }}</mat-chip></mat-cell></ng-container>
+      <ng-container matColumnDef="description"><mat-header-cell *matHeaderCellDef>Description</mat-header-cell><mat-cell *matCellDef="let c" class="truncate">{{ c.description }}</mat-cell></ng-container>
+      <ng-container matColumnDef="status"><mat-header-cell *matHeaderCellDef>Status</mat-header-cell><mat-cell *matCellDef="let c"><mat-chip [class]="'status-' + c.status?.toLowerCase()">{{ c.status }}</mat-chip></mat-cell></ng-container>
+      <ng-container matColumnDef="createdAt"><mat-header-cell *matHeaderCellDef>Filed</mat-header-cell><mat-cell *matCellDef="let c">{{ c.createdAt | date:'mediumDate' }}</mat-cell></ng-container>
+      <ng-container matColumnDef="actions"><mat-header-cell *matHeaderCellDef>Actions</mat-header-cell><mat-cell *matCellDef="let c"><button mat-icon-button (click)="openReview(c)" color="primary"><mat-icon>edit</mat-icon></button></mat-cell></ng-container>
+      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="totalElements" [pageSize]="size" (page)="onPage($event)"></mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+<div class="dialog-overlay" *ngIf="reviewComplaint" (click)="reviewComplaint = null">
+  <mat-card class="dialog-card" (click)="$event.stopPropagation()">
+    <mat-card-header><mat-card-title>Update Complaint</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <p>{{ reviewComplaint.description }}</p>
+      <mat-form-field appearance="outline" style="width:100%"><mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="newStatus"><mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option></mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%"><mat-label>Admin Notes</mat-label>
+        <textarea matInput [(ngModel)]="adminNotes" rows="3"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="reviewComplaint = null">Cancel</button>
+      <button mat-raised-button color="primary" (click)="submit()">Update</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

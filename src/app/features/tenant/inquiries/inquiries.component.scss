@@ -1,0 +1,6 @@
+.page-container { padding: 24px; h2 { margin: 0 0 16px; } }
+.full-width { width: 100%; }
+.loading { display: flex; justify-content: center; padding: 40px; }
+.msg-cell { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.link { color: #1976d2; cursor: pointer; text-decoration: underline; }
+.empty-state { text-align: center; padding: 40px; color: #888; mat-icon { font-size: 48px; height: 48px; width: 48px; display: block; margin: 0 auto 8px; } }

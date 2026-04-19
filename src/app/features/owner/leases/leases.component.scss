@@ -1,0 +1,8 @@
+.page-container { padding: 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; h2 { margin: 0; } }
+.panel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; h3 { margin: 0; flex: 1; } }
+.full-width { width: 100%; }
+.loading { display: flex; justify-content: center; padding: 40px; }
+.empty-state { text-align: center; padding: 40px; color: #888; mat-icon { font-size: 48px; height: 48px; width: 48px; } }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.dialog-card { width: 480px; max-width: 90vw; }

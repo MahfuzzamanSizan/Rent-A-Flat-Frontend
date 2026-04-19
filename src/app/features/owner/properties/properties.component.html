@@ -1,0 +1,27 @@
+<div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+  <h1>My Properties</h1>
+  <button mat-raised-button color="primary" routerLink="/owner/properties/new"><mat-icon>add</mat-icon> Add Property</button>
+</div>
+<mat-card>
+  <mat-card-content>
+    <div *ngIf="loading" class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+    <mat-table [dataSource]="properties" *ngIf="!loading">
+      <ng-container matColumnDef="title"><mat-header-cell *matHeaderCellDef>Title</mat-header-cell><mat-cell *matCellDef="let p">{{ p.title }}</mat-cell></ng-container>
+      <ng-container matColumnDef="type"><mat-header-cell *matHeaderCellDef>Type</mat-header-cell><mat-cell *matCellDef="let p"><mat-chip>{{ p.propertyType }}</mat-chip></mat-cell></ng-container>
+      <ng-container matColumnDef="rentAmount"><mat-header-cell *matHeaderCellDef>Rent (৳)</mat-header-cell><mat-cell *matCellDef="let p">{{ p.rentAmount | number }}</mat-cell></ng-container>
+      <ng-container matColumnDef="status"><mat-header-cell *matHeaderCellDef>Status</mat-header-cell><mat-cell *matCellDef="let p"><mat-chip>{{ p.status }}</mat-chip></mat-cell></ng-container>
+      <ng-container matColumnDef="boosted"><mat-header-cell *matHeaderCellDef>Boosted</mat-header-cell><mat-cell *matCellDef="let p"><mat-icon [color]="p.boosted ? 'accent' : ''">{{ p.boosted ? 'rocket_launch' : 'remove' }}</mat-icon></mat-cell></ng-container>
+      <ng-container matColumnDef="views"><mat-header-cell *matHeaderCellDef>Views</mat-header-cell><mat-cell *matCellDef="let p">{{ p.viewsCount }}</mat-cell></ng-container>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let p">
+          <button mat-icon-button (click)="edit(p)" matTooltip="Edit"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="delete(p)" matTooltip="Delete"><mat-icon>delete</mat-icon></button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+    </mat-table>
+    <p *ngIf="!loading && !properties.length" style="text-align:center;color:#999;padding:40px">No properties yet. <a routerLink="/owner/properties/new">Add your first listing!</a></p>
+  </mat-card-content>
+</mat-card>

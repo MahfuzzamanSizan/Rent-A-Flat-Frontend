@@ -1,0 +1,88 @@
+<div class="form-page">
+  <div class="form-header">
+    <button mat-icon-button (click)="cancel()"><mat-icon>arrow_back</mat-icon></button>
+    <h2>Create Lease Agreement</h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-card class="form-card">
+      <mat-card-header><mat-card-title>Parties</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Property</mat-label>
+          <mat-select formControlName="propertyId">
+            <mat-option *ngFor="let p of myProperties" [value]="p.id">{{ p.title }}</mat-option>
+          </mat-select>
+          <mat-error>Property is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tenant User ID</mat-label>
+          <input matInput formControlName="tenantId" placeholder="Enter tenant's user ID">
+          <mat-hint>Ask the tenant for their RentEase User ID</mat-hint>
+          <mat-error>Tenant ID is required</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="form-card">
+      <mat-card-header><mat-card-title>Lease Terms</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <div class="row-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Monthly Rent (৳)</mat-label>
+            <input matInput type="number" formControlName="rentAmount">
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Security Deposit (৳)</mat-label>
+            <input matInput type="number" formControlName="securityDeposit">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rent Due Day</mat-label>
+            <input matInput type="number" formControlName="rentDueDay" min="1" max="28">
+            <mat-hint>Day of month (1-28)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Notice Period (days)</mat-label>
+          <input matInput type="number" formControlName="noticePeriodDays">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Additional Terms & Conditions</mat-label>
+          <textarea matInput formControlName="terms" rows="5" placeholder="Specify additional lease conditions..."></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">
+        <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
+        <span *ngIf="!saving">Create Lease</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,5 @@
+.page-container { padding: 24px; h2 { margin: 0 0 16px; } }
+.panel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; h3 { margin: 0; } }
+.full-width { width: 100%; }
+.loading { display: flex; justify-content: center; padding: 40px; }
+.empty-state { text-align: center; padding: 40px; color: #888; mat-icon { font-size: 48px; height: 48px; width: 48px; display: block; margin: 0 auto 8px; } }

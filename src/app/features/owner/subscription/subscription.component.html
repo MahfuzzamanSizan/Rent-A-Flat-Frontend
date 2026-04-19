@@ -1,0 +1,77 @@
+<div class="page-container">
+  <h2>Subscription</h2>
+
+  <!-- Current Subscription -->
+  <mat-card *ngIf="currentSub" class="current-sub-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>verified</mat-icon>
+      <mat-card-title>Active Subscription</mat-card-title>
+      <mat-card-subtitle>{{ currentSub.status }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="sub-details">
+        <div class="sub-detail"><span class="label">Valid Until</span><span>{{ currentSub.endDate | date:'mediumDate' }}</span></div>
+        <div class="sub-detail"><span class="label">Days Remaining</span><span class="highlight">{{ daysLeft() }} days</span></div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="!currentSub && !loading" class="no-sub-card">
+    <mat-card-content>
+      <mat-icon>warning</mat-icon>
+      <p>You have no active subscription. Subscribe to a plan to list properties.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Plans -->
+  <h3>Available Plans</h3>
+  <div *ngIf="loading" class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  <div class="plans-grid" *ngIf="!loading">
+    <mat-card *ngFor="let plan of plans" class="plan-card" [class.active-plan]="isActive(plan)">
+      <mat-card-header>
+        <mat-card-title>{{ plan.name }}</mat-card-title>
+        <mat-card-subtitle *ngIf="isActive(plan)" class="active-badge">Current Plan</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="plan-price">৳{{ plan.price | number }}<span>/{{ plan.durationDays }} days</span></div>
+        <mat-divider></mat-divider>
+        <ul class="plan-features">
+          <li><mat-icon>home</mat-icon> {{ plan.maxListings }} listing(s)</li>
+          <li><mat-icon>photo_library</mat-icon> {{ plan.maxPhotos }} photos per listing</li>
+          <li><mat-icon>rocket_launch</mat-icon> {{ plan.boostCredits }} boost credit(s)</li>
+          <li><mat-icon>contacts</mat-icon> {{ plan.maxContacts }} tenant contacts</li>
+          <li *ngIf="plan.features">{{ plan.features }}</li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="openConfirm(plan)" [disabled]="isActive(plan)">
+          {{ isActive(plan) ? 'Current Plan' : 'Subscribe' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    <div *ngIf="plans.length === 0" class="empty-state">
+      <mat-icon>inventory</mat-icon><p>No plans available</p>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Subscribe Dialog -->
+<div *ngIf="confirmPlan" class="overlay">
+  <mat-card class="dialog-card">
+    <mat-card-header><mat-card-title>Subscribe to {{ confirmPlan.name }}</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <p>Price: <strong>৳{{ confirmPlan.price | number }}</strong> for {{ confirmPlan.durationDays }} days</p>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Payment Reference (bKash/Bank TXN)</mat-label>
+        <input matInput [(ngModel)]="paymentRef" placeholder="e.g. TXN123456">
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="confirmPlan = null">Cancel</button>
+      <button mat-raised-button color="primary" (click)="subscribe()" [disabled]="subscribing">
+        <mat-spinner *ngIf="subscribing" diameter="20"></mat-spinner>
+        <span *ngIf="!subscribing">Confirm</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

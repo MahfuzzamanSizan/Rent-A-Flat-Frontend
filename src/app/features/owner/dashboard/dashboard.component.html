@@ -1,0 +1,23 @@
+<div class="page-header"><h1>Welcome back, {{ fullName || 'Owner' }}!</h1></div>
+<div *ngIf="loading" class="loading"><mat-spinner></mat-spinner></div>
+<div *ngIf="!loading">
+  <div class="kpi-grid">
+    <mat-card class="kpi-card" routerLink="/owner/properties"><mat-card-content><mat-icon color="primary">apartment</mat-icon><div><div class="val">{{ activeProperties.length }}</div><div class="lbl">Active Listings</div></div></mat-card-content></mat-card>
+    <mat-card class="kpi-card" routerLink="/owner/inquiries"><mat-card-content><mat-icon color="accent">question_answer</mat-icon><div><div class="val">{{ pendingInquiries.length }}</div><div class="lbl">Pending Inquiries</div></div></mat-card-content></mat-card>
+    <mat-card class="kpi-card" routerLink="/owner/leases"><mat-card-content><mat-icon color="warn">description</mat-icon><div><div class="val">{{ activeLeases.length }}</div><div class="lbl">Active Leases</div></div></mat-card-content></mat-card>
+    <mat-card class="kpi-card" routerLink="/owner/subscription"><mat-card-content><mat-icon>card_membership</mat-icon><div><div class="val">{{ subscription?.status || 'None' }}</div><div class="lbl">Subscription</div></div></mat-card-content></mat-card>
+  </div>
+  <mat-card style="margin-top:16px">
+    <mat-card-header><mat-card-title>Recent Inquiries</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <p *ngIf="!inquiries.length" class="empty">No inquiries yet.</p>
+      <mat-list>
+        <mat-list-item *ngFor="let i of inquiries.slice(0,5)">
+          <mat-icon matListItemIcon [color]="i.status === 'PENDING' ? 'accent' : 'primary'">question_answer</mat-icon>
+          <div matListItemTitle>{{ i.message }}</div>
+          <div matListItemLine><mat-chip>{{ i.status }}</mat-chip> · {{ i.createdAt | date:'mediumDate' }}</div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

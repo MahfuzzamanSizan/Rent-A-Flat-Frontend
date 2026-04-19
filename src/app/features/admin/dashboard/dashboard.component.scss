@@ -1,0 +1,13 @@
+.page-header { margin-bottom: 24px; h1 { margin: 0; font-size: 1.8rem; } .subtitle { color: #666; } }
+.loading-center { display: flex; justify-content: center; padding: 60px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi-card {
+  mat-card-content { display: flex; align-items: center; gap: 16px; padding: 20px !important; }
+  .kpi-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; mat-icon { font-size: 1.8rem; width: 1.8rem; height: 1.8rem; } }
+  .kpi-value { font-size: 1.8rem; font-weight: 700; color: #333; }
+  .kpi-label { color: #666; font-size: 0.85rem; }
+}
+.revenue-card {
+  mat-card-header { mat-card-title { display: flex; align-items: center; gap: 8px; } }
+  .revenue-amount { font-size: 2.5rem; font-weight: 700; color: #2e7d32; padding: 16px 0; }
+}

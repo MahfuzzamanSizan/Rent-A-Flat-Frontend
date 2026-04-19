@@ -1,0 +1,5 @@
+.page-header { margin-bottom: 24px; h1 { margin:0; font-size:1.8rem; } }
+.loading { display:flex; justify-content:center; padding:60px; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+.kpi-card mat-card-content { display:flex; align-items:center; gap:16px; padding:20px !important; mat-icon { font-size:2.5rem; width:2.5rem; height:2.5rem; } .val { font-size:1.8rem; font-weight:700; } .lbl { color:#666; font-size:0.85rem; } }
+.empty { color:#999; text-align:center; padding:20px; }

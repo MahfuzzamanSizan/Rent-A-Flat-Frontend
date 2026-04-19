@@ -1,0 +1,22 @@
+<div class="page-header"><h1>Broadcast Notification</h1></div>
+<mat-card style="max-width:600px">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="send()">
+      <mat-form-field appearance="outline" style="width:100%"><mat-label>Title</mat-label><input matInput formControlName="title" /></mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%"><mat-label>Message Body</mat-label><textarea matInput formControlName="body" rows="4"></textarea></mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Target Audience</mat-label>
+        <mat-select formControlName="targetRole">
+          <mat-option value="">All Users</mat-option>
+          <mat-option value="OWNER">Owners Only</mat-option>
+          <mat-option value="TENANT">Tenants Only</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+        <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block"></mat-spinner>
+        <mat-icon *ngIf="!loading">campaign</mat-icon>
+        <span>Send Broadcast</span>
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

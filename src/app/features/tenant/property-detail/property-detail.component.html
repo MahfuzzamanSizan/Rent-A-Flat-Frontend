@@ -1,0 +1,118 @@
+<div class="page-container">
+  <div *ngIf="loading" class="loading"><mat-spinner diameter="48"></mat-spinner></div>
+
+  <div *ngIf="!loading && property">
+    <!-- Photo Gallery -->
+    <div class="photo-gallery">
+      <div class="main-photo" [style.background-image]="property.photoUrls?.length ? 'url(' + property.photoUrls![0] + ')' : ''">
+        <span *ngIf="!property.photoUrls?.length" class="no-photo"><mat-icon>home</mat-icon></span>
+      </div>
+      <div class="thumb-row" *ngIf="property.photoUrls && property.photoUrls.length > 1">
+        <div *ngFor="let url of property.photoUrls.slice(1, 4)" class="thumb" [style.background-image]="'url(' + url + ')'"></div>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+      <!-- Main Details -->
+      <div class="main-section">
+        <div class="title-row">
+          <div>
+            <h1>{{ property.title }}</h1>
+            <p class="location"><mat-icon>location_on</mat-icon> {{ property.fullAddress }}</p>
+          </div>
+          <div class="action-buttons">
+            <button mat-icon-button [color]="shortlisted ? 'warn' : ''" (click)="toggleShortlist()" [matTooltip]="shortlisted ? 'Remove from shortlist' : 'Add to shortlist'">
+              <mat-icon>{{ shortlisted ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="meta-chips">
+          <mat-chip>{{ property.propertyType }}</mat-chip>
+          <mat-chip *ngIf="property.bedrooms">{{ property.bedrooms }} Bedrooms</mat-chip>
+          <mat-chip *ngIf="property.bathrooms">{{ property.bathrooms }} Bathrooms</mat-chip>
+          <mat-chip *ngIf="property.sizeSqft">{{ property.sizeSqft }} sqft</mat-chip>
+          <mat-chip *ngIf="property.floorNumber">Floor {{ property.floorNumber }}/{{ property.totalFloors }}</mat-chip>
+          <mat-chip *ngIf="property.negotiable" color="accent">Negotiable</mat-chip>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <section *ngIf="property.description">
+          <h3>Description</h3>
+          <p>{{ property.description }}</p>
+        </section>
+
+        <section *ngIf="property.amenities">
+          <h3>Amenities</h3>
+          <p>{{ property.amenities }}</p>
+        </section>
+
+        <section *ngIf="property.houseRules">
+          <h3>House Rules</h3>
+          <p>{{ property.houseRules }}</p>
+        </section>
+
+        <section *ngIf="property.preferredTenant">
+          <h3>Preferred Tenant</h3>
+          <p>{{ property.preferredTenant }}</p>
+        </section>
+
+        <section *ngIf="property.availableFrom">
+          <h3>Available From</h3>
+          <p>{{ property.availableFrom | date:'mediumDate' }}</p>
+        </section>
+
+        <!-- Reviews -->
+        <section>
+          <h3>Reviews ({{ reviews.length }})</h3>
+          <div *ngFor="let r of reviews" class="review-card">
+            <div class="review-stars">
+              <mat-icon *ngFor="let s of stars(r.rating)" class="star">star</mat-icon>
+            </div>
+            <p>{{ r.comment || 'No comment provided.' }}</p>
+            <small>{{ r.createdAt | date:'mediumDate' }}</small>
+          </div>
+          <p *ngIf="reviews.length === 0" class="no-reviews">No reviews yet.</p>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <mat-card class="price-card">
+          <mat-card-content>
+            <div class="price">৳{{ property.rentAmount | number }}<span>/month</span></div>
+            <div *ngIf="property.securityDeposit" class="deposit">Security: ৳{{ property.securityDeposit | number }}</div>
+            <mat-divider></mat-divider>
+            <div class="stat-row"><mat-icon>visibility</mat-icon> {{ property.viewsCount }} views</div>
+            <div class="stat-row"><mat-icon>chat_bubble_outline</mat-icon> {{ property.inquiriesCount || 0 }} inquiries</div>
+            <button mat-raised-button color="primary" class="inquiry-btn" (click)="inquiryDialog = true">
+              <mat-icon>send</mat-icon> Send Inquiry
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inquiry Dialog -->
+<div *ngIf="inquiryDialog" class="overlay">
+  <mat-card class="dialog-card">
+    <mat-card-header><mat-card-title>Send Inquiry</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Your Message</mat-label>
+        <textarea matInput [(ngModel)]="inquiryMessage" rows="5" placeholder="Introduce yourself and ask any questions..."></textarea>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="inquiryDialog = false">Cancel</button>
+      <button mat-raised-button color="primary" (click)="sendInquiry()" [disabled]="!inquiryMessage.trim() || sendingInquiry">
+        <mat-spinner *ngIf="sendingInquiry" diameter="20"></mat-spinner>
+        <span *ngIf="!sendingInquiry">Send</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+

@@ -1,0 +1,29 @@
+<div class="page-container">
+  <h2>Shortlisted Properties</h2>
+  <div *ngIf="loading" class="loading"><mat-spinner diameter="48"></mat-spinner></div>
+  <div *ngIf="!loading" class="properties-grid">
+    <mat-card *ngFor="let p of properties" class="property-card">
+      <div class="property-image" [style.background-image]="p.photoUrls?.length ? 'url(' + p.photoUrls![0] + ')' : ''" (click)="view(p.id)">
+        <span *ngIf="!p.photoUrls?.length" class="no-photo"><mat-icon>home</mat-icon></span>
+        <mat-chip class="type-chip">{{ p.propertyType }}</mat-chip>
+      </div>
+      <mat-card-content (click)="view(p.id)">
+        <h3>{{ p.title }}</h3>
+        <p class="location"><mat-icon>location_on</mat-icon> {{ p.fullAddress || p.areaId }}</p>
+        <div class="price-row">
+          <span class="price">৳{{ p.rentAmount | number }}/mo</span>
+          <span *ngIf="p.bedrooms">{{ p.bedrooms }} bed</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="view(p.id)"><mat-icon>visibility</mat-icon> View</button>
+        <button mat-button color="warn" (click)="remove(p)"><mat-icon>favorite_border</mat-icon> Remove</button>
+      </mat-card-actions>
+    </mat-card>
+    <div *ngIf="properties.length === 0" class="empty-state">
+      <mat-icon>favorite_border</mat-icon>
+      <p>No shortlisted properties. Browse and save properties you like!</p>
+    </div>
+  </div>
+</div>
+

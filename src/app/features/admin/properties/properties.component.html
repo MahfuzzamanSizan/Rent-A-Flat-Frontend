@@ -1,0 +1,51 @@
+<div class="page-header"><h1>Property Management</h1></div>
+<mat-tab-group (selectedIndexChange)="onTab($event)">
+  <mat-tab label="All Properties"></mat-tab>
+  <mat-tab label="Pending Approval"></mat-tab>
+</mat-tab-group>
+<mat-card style="margin-top:16px">
+  <mat-card-content>
+    <div *ngIf="loading" class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+    <mat-table [dataSource]="properties" *ngIf="!loading">
+      <ng-container matColumnDef="title"><mat-header-cell *matHeaderCellDef>Title</mat-header-cell><mat-cell *matCellDef="let p">{{ p.title }}</mat-cell></ng-container>
+      <ng-container matColumnDef="type"><mat-header-cell *matHeaderCellDef>Type</mat-header-cell><mat-cell *matCellDef="let p"><mat-chip>{{ p.propertyType }}</mat-chip></mat-cell></ng-container>
+      <ng-container matColumnDef="rentAmount"><mat-header-cell *matHeaderCellDef>Rent (৳)</mat-header-cell><mat-cell *matCellDef="let p">{{ p.rentAmount | number }}</mat-cell></ng-container>
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+        <mat-cell *matCellDef="let p"><mat-chip [class]="'status-' + p.status?.toLowerCase()">{{ p.status }}</mat-chip></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="boosted"><mat-header-cell *matHeaderCellDef>Boosted</mat-header-cell><mat-cell *matCellDef="let p"><mat-icon [color]="p.boosted ? 'accent' : ''">{{ p.boosted ? 'rocket_launch' : 'remove' }}</mat-icon></mat-cell></ng-container>
+      <ng-container matColumnDef="createdAt"><mat-header-cell *matHeaderCellDef>Created</mat-header-cell><mat-cell *matCellDef="let p">{{ p.createdAt | date:'mediumDate' }}</mat-cell></ng-container>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let p"><button mat-icon-button matTooltip="Review" (click)="openReview(p)" color="primary"><mat-icon>rate_review</mat-icon></button></mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="totalElements" [pageSize]="size" [pageSizeOptions]="[10,20,50]" (page)="onPage($event)"></mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+<div class="dialog-overlay" *ngIf="reviewProperty" (click)="reviewProperty = null">
+  <mat-card class="dialog-card" (click)="$event.stopPropagation()">
+    <mat-card-header><mat-card-title>Review: {{ reviewProperty.title }}</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Decision</mat-label>
+        <mat-select [(ngModel)]="reviewAction">
+          <mat-option value="APPROVED">Approve</mat-option>
+          <mat-option value="REJECTED">Reject</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%" *ngIf="reviewAction === 'REJECTED'">
+        <mat-label>Rejection Reason</mat-label>
+        <textarea matInput [(ngModel)]="reviewReason" rows="3"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="reviewProperty = null">Cancel</button>
+      <button mat-raised-button color="primary" (click)="submitReview()" [disabled]="!reviewAction">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
