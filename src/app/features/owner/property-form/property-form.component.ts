@@ -15,7 +15,7 @@ export class PropertyFormComponent implements OnInit {
   saving = false;
   editId: string | null = null;
   propertyTypes = ['APARTMENT', 'SUBLET', 'MESS', 'BACHELOR', 'FAMILY'];
-  preferredTenantOptions = ['Any', 'Family', 'Bachelor', 'Female Only', 'Male Only', 'Student'];
+  preferredTenantOptions = ['BACHELOR', 'FAMILY', 'BOTH'];
 
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private route: ActivatedRoute, private snack: MatSnackBar) {
     this.form = this.fb.group({
@@ -35,7 +35,7 @@ export class PropertyFormComponent implements OnInit {
       availableFrom: [null],
       amenities: [''],
       houseRules: [''],
-      preferredTenant: ['Any'],
+      preferredTenant: [null],
       videoUrl: [''],
       photoUrls: ['']
     });
@@ -48,7 +48,9 @@ export class PropertyFormComponent implements OnInit {
       this.loading = true;
       this.api.getProperty(this.editId).subscribe({
         next: p => {
-          this.form.patchValue({ ...p, photoUrls: p.photoUrls?.join(', ') || '' });
+          const amenitiesStr = Array.isArray(p.amenities) ? (p.amenities as string[]).join(', ') : '';
+          const photoUrlsStr = Array.isArray(p.photoUrls) ? p.photoUrls.join(', ') : '';
+          this.form.patchValue({ ...p, amenities: amenitiesStr, photoUrls: photoUrlsStr });
           this.loading = false;
         },
         error: () => { this.loading = false; this.snack.open('Failed to load property', 'Close', { duration: 3000 }); }
@@ -72,7 +74,9 @@ export class PropertyFormComponent implements OnInit {
   save(): void {
     if (this.form.invalid) return;
     const val = { ...this.form.value };
+    val.amenities = val.amenities ? val.amenities.split(',').map((s: string) => s.trim()).filter((s: string) => s) : [];
     val.photoUrls = val.photoUrls ? val.photoUrls.split(',').map((s: string) => s.trim()).filter((s: string) => s) : [];
+    if (!val.preferredTenant) val.preferredTenant = null;
     this.saving = true;
     const obs = this.editId ? this.api.updateProperty(this.editId, val) : this.api.createProperty(val);
     obs.subscribe({

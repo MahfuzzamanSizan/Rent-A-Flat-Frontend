@@ -123,14 +123,18 @@
           <mat-form-field appearance="outline">
             <mat-label>Preferred Tenant</mat-label>
             <mat-select formControlName="preferredTenant">
-              <mat-option *ngFor="let p of preferredTenantOptions" [value]="p">{{ p }}</mat-option>
+              <mat-option [value]="null">Any</mat-option>
+              <mat-option value="BACHELOR">Bachelor</mat-option>
+              <mat-option value="FAMILY">Family</mat-option>
+              <mat-option value="BOTH">Both</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Amenities</mat-label>
-          <textarea matInput formControlName="amenities" rows="3" placeholder="e.g. AC, Gas, Lift, Parking, Generator..."></textarea>
+          <textarea matInput formControlName="amenities" rows="3" placeholder="e.g. AC, Gas, Lift, Parking, Generator"></textarea>
+          <mat-hint>Separate multiple amenities with commas</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">

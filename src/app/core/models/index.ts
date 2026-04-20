@@ -44,7 +44,7 @@ export interface Property {
   totalFloors?: number;
   sizeSqft?: number;
   availableFrom?: string;
-  amenities?: string;
+  amenities?: string[];
   houseRules?: string;
   preferredTenant?: string;
   videoUrl?: string;
@@ -147,7 +147,7 @@ export interface SubscriptionPlan {
   maxPhotos: number;
   boostCredits: number;
   maxContacts: number;
-  features?: string;
+  features?: Record<string, unknown>;
   active: boolean;
   createdAt?: string;
 }

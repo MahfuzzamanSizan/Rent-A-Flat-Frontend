@@ -43,9 +43,11 @@
           <p>{{ property.description }}</p>
         </section>
 
-        <section *ngIf="property.amenities">
+        <section *ngIf="property.amenities?.length">
           <h3>Amenities</h3>
-          <p>{{ property.amenities }}</p>
+          <mat-chip-set>
+            <mat-chip *ngFor="let a of property.amenities">{{ a }}</mat-chip>
+          </mat-chip-set>
         </section>
 
         <section *ngIf="property.houseRules">
