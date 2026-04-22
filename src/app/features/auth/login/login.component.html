@@ -1,68 +1,116 @@
 <div class="login-wrapper">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>
-        <div class="brand"><mat-icon>home</mat-icon><span>RentEase</span></div>
-      </mat-card-title>
-      <mat-card-subtitle>House Rent Management System</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form *ngIf="step === 'phone'" [formGroup]="phoneForm" (ngSubmit)="sendOtp()">
-        <h3>Enter your phone number</h3>
+
+  <!-- Left Panel -->
+  <div class="login-left">
+    <div class="left-content">
+      <div class="hero-icon"><mat-icon>home_work</mat-icon></div>
+      <h1>Find Your<br><span class="accent-text">Perfect Home</span></h1>
+      <p>Bangladesh's trusted rental platform connecting tenants with verified landlords.</p>
+      <div class="feature-list">
+        <div class="feature-item"><mat-icon>verified</mat-icon><span>Verified Listings</span></div>
+        <div class="feature-item"><mat-icon>security</mat-icon><span>Secure Payments</span></div>
+        <div class="feature-item"><mat-icon>description</mat-icon><span>Digital Leases</span></div>
+        <div class="feature-item"><mat-icon>support_agent</mat-icon><span>24/7 Support</span></div>
+      </div>
+    </div>
+    <div class="floating-cards">
+      <div class="float-card card-1"><mat-icon>apartment</mat-icon><span>2 BHK Apartment<br><small>৳18,000/mo</small></span></div>
+      <div class="float-card card-2"><mat-icon>villa</mat-icon><span>Studio Flat<br><small>৳8,500/mo</small></span></div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="login-right">
+    <div class="login-card">
+
+      <div class="login-logo">
+        <div class="logo-icon"><mat-icon>home_work</mat-icon></div>
+        <div>
+          <h2>RentEase</h2>
+          <p>Sign in to continue</p>
+        </div>
+      </div>
+
+      <!-- Step 1: Phone -->
+      <form *ngIf="step === 'phone'" [formGroup]="phoneForm" (ngSubmit)="sendOtp()" class="auth-form">
+        <h3>Enter your phone</h3>
+        <p class="form-hint">We'll send a one-time password to verify your number.</p>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Phone Number</mat-label>
-          <mat-icon matPrefix>phone</mat-icon>
-          <input matInput formControlName="phone" placeholder="01XXXXXXXXX or +8801XXXXXXXXX" />
+          <mat-icon matPrefix class="field-icon">phone</mat-icon>
+          <input matInput formControlName="phone" placeholder="01XXXXXXXXX" />
           <mat-error>Enter a valid phone number</mat-error>
         </mat-form-field>
-        <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="loading">
-          <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block"></mat-spinner>
-          <span *ngIf="!loading">Send OTP</span>
+
+        <button mat-raised-button color="primary" class="submit-btn" type="submit" [disabled]="loading || phoneForm.invalid">
+          <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+          <span *ngIf="!loading">Get OTP <mat-icon>arrow_forward</mat-icon></span>
         </button>
       </form>
-      <form *ngIf="step === 'otp'" [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
-        <h3>Enter OTP</h3>
-        <p class="sub-text">OTP sent to <strong>{{ phoneForm.value.phone }}</strong></p>
-        <div *ngIf="devOtp" class="dev-otp"><mat-icon>info</mat-icon> Dev OTP: <strong>{{ devOtp }}</strong></div>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>OTP Code</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput formControlName="otp" maxlength="6" placeholder="6-digit OTP" />
-          <mat-error>Enter valid OTP</mat-error>
+
+      <!-- Step 2: OTP -->
+      <form *ngIf="step === 'otp'" [formGroup]="otpForm" (ngSubmit)="verifyOtp()" class="auth-form">
+        <h3>Verify OTP</h3>
+        <p class="form-hint">Code sent to <strong>{{ phoneForm.value.phone }}</strong></p>
+
+        <div *ngIf="devOtp" class="dev-otp">
+          <mat-icon>info_outline</mat-icon>
+          <span>Dev OTP: <strong>{{ devOtp }}</strong></span>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width otp-field">
+          <mat-label>Enter 6-digit OTP</mat-label>
+          <mat-icon matPrefix class="field-icon">lock_outline</mat-icon>
+          <input matInput formControlName="otp" maxlength="6" placeholder="• • • • • •" />
+          <mat-error>Enter valid 6-digit OTP</mat-error>
         </mat-form-field>
-        <div class="otp-actions">
-          <button mat-button type="button" (click)="back()">Back</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="loading">
-            <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block"></mat-spinner>
-            <span *ngIf="!loading">Verify & Login</span>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="back()" class="back-btn">
+            <mat-icon>arrow_back</mat-icon> Back
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || otpForm.invalid" class="submit-btn-sm">
+            <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+            <span *ngIf="!loading">Verify</span>
           </button>
         </div>
       </form>
 
-      <form *ngIf="step === 'register'" [formGroup]="registerForm" (ngSubmit)="register()">
+      <!-- Step 3: Register -->
+      <form *ngIf="step === 'register'" [formGroup]="registerForm" (ngSubmit)="register()" class="auth-form">
         <h3>Create Account</h3>
-        <p class="sub-text">First time here! Tell us about yourself.</p>
+        <p class="form-hint">First time here! Tell us a bit about yourself.</p>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Full Name</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
+          <mat-icon matPrefix class="field-icon">person_outline</mat-icon>
           <input matInput formControlName="fullName" placeholder="Your full name" />
           <mat-error>Full name is required</mat-error>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>I am a...</mat-label>
-          <mat-icon matPrefix>badge</mat-icon>
+          <mat-icon matPrefix class="field-icon">badge</mat-icon>
           <mat-select formControlName="role">
-            <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
+            <mat-option *ngFor="let r of roles" [value]="r.value">
+              {{ r.label }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="otp-actions">
-          <button mat-button type="button" (click)="back()">Back</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="loading || registerForm.invalid">
-            <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block"></mat-spinner>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="back()" class="back-btn">
+            <mat-icon>arrow_back</mat-icon> Back
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || registerForm.invalid" class="submit-btn-sm">
+            <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
             <span *ngIf="!loading">Create Account</span>
           </button>
         </div>
       </form>
-    </mat-card-content>
-  </mat-card>
+
+    </div>
+  </div>
+
 </div>

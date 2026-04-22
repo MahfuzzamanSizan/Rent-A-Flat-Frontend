@@ -101,7 +101,7 @@ export interface Lease {
   rentDueDay: number;
   noticePeriodDays: number;
   terms?: string;
-  status: 'DRAFT' | 'ACTIVE' | 'TERMINATED' | 'EXPIRED';
+  status: 'DRAFT' | 'PENDING_SIGNATURE' | 'ACTIVE' | 'TERMINATED' | 'EXPIRED';
   ownerSignedAt?: string;
   tenantSignedAt?: string;
   terminationReason?: string;
@@ -219,4 +219,14 @@ export interface Review {
   comment?: string;
   published: boolean;
   createdAt: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  inquiryId: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  read: boolean;
+  sentAt: string;
 }

@@ -21,7 +21,8 @@
             <p class="location"><mat-icon>location_on</mat-icon> {{ property.fullAddress }}</p>
           </div>
           <div class="action-buttons">
-            <button mat-icon-button [color]="shortlisted ? 'warn' : ''" (click)="toggleShortlist()" [matTooltip]="shortlisted ? 'Remove from shortlist' : 'Add to shortlist'">
+            <button mat-icon-button [color]="shortlisted ? 'warn' : ''" (click)="toggleShortlist()"
+                    [matTooltip]="shortlisted ? 'Remove from shortlist' : 'Add to shortlist'">
               <mat-icon>{{ shortlisted ? 'favorite' : 'favorite_border' }}</mat-icon>
             </button>
           </div>
@@ -45,9 +46,7 @@
 
         <section *ngIf="property.amenities?.length">
           <h3>Amenities</h3>
-          <mat-chip-set>
-            <mat-chip *ngFor="let a of property.amenities">{{ a }}</mat-chip>
-          </mat-chip-set>
+          <mat-chip-set><mat-chip *ngFor="let a of property.amenities">{{ a }}</mat-chip></mat-chip-set>
         </section>
 
         <section *ngIf="property.houseRules">
@@ -67,15 +66,58 @@
 
         <!-- Reviews -->
         <section>
-          <h3>Reviews ({{ reviews.length }})</h3>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <h3 style="margin:0">Reviews ({{ reviews.length }})</h3>
+            <div *ngIf="reviews.length > 0" style="display:flex; gap:2px; align-items:center;">
+              <mat-icon style="color:#f59e0b; font-size:18px; height:18px;">star</mat-icon>
+              <strong>{{ averageRating | number:'1.1-1' }}</strong>
+            </div>
+          </div>
+
+          <!-- Write Review Button -->
+          <div *ngIf="eligibleLeaseId && !showReviewForm" style="margin-bottom:16px;">
+            <button mat-stroked-button color="primary" (click)="showReviewForm = true">
+              <mat-icon>rate_review</mat-icon> Write a Review
+            </button>
+          </div>
+
+          <!-- Review Form -->
+          <div *ngIf="showReviewForm" class="review-form">
+            <h4>Share your experience</h4>
+            <div class="star-select">
+              <mat-icon *ngFor="let i of [1,2,3,4,5]"
+                        [class.filled]="i <= (hoverRating || reviewRating)"
+                        (click)="reviewRating = i"
+                        (mouseenter)="hoverRating = i"
+                        (mouseleave)="hoverRating = 0">
+                {{ i <= (hoverRating || reviewRating) ? 'star' : 'star_border' }}
+              </mat-icon>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Your comment (optional)</mat-label>
+              <textarea matInput [(ngModel)]="reviewComment" rows="3" placeholder="Tell others about your experience..."></textarea>
+            </mat-form-field>
+            <div class="review-actions">
+              <button mat-button (click)="showReviewForm = false; reviewRating = 0; reviewComment = ''">Cancel</button>
+              <button mat-raised-button color="primary" (click)="submitReview()" [disabled]="reviewRating === 0 || submittingReview">
+                <mat-spinner *ngIf="submittingReview" diameter="18"></mat-spinner>
+                <span *ngIf="!submittingReview">Submit Review</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Review List -->
           <div *ngFor="let r of reviews" class="review-card">
-            <div class="review-stars">
-              <mat-icon *ngFor="let s of stars(r.rating)" class="star">star</mat-icon>
+            <div class="review-header">
+              <div class="review-stars">
+                <mat-icon *ngFor="let s of stars(r.rating)" class="star">star</mat-icon>
+                <mat-icon *ngFor="let s of emptyStars(r.rating)" class="star" style="color:#e2e8f0">star</mat-icon>
+              </div>
+              <small>{{ r.createdAt | date:'mediumDate' }}</small>
             </div>
             <p>{{ r.comment || 'No comment provided.' }}</p>
-            <small>{{ r.createdAt | date:'mediumDate' }}</small>
           </div>
-          <p *ngIf="reviews.length === 0" class="no-reviews">No reviews yet.</p>
+          <p *ngIf="reviews.length === 0 && !showReviewForm" class="no-reviews">No reviews yet. Be the first to review!</p>
         </section>
       </div>
 
@@ -84,7 +126,7 @@
         <mat-card class="price-card">
           <mat-card-content>
             <div class="price">৳{{ property.rentAmount | number }}<span>/month</span></div>
-            <div *ngIf="property.securityDeposit" class="deposit">Security: ৳{{ property.securityDeposit | number }}</div>
+            <div *ngIf="property.securityDeposit" class="deposit">Security deposit: ৳{{ property.securityDeposit | number }}</div>
             <mat-divider></mat-divider>
             <div class="stat-row"><mat-icon>visibility</mat-icon> {{ property.viewsCount }} views</div>
             <div class="stat-row"><mat-icon>chat_bubble_outline</mat-icon> {{ property.inquiriesCount || 0 }} inquiries</div>
@@ -117,4 +159,3 @@
     </mat-card-actions>
   </mat-card>
 </div>
-

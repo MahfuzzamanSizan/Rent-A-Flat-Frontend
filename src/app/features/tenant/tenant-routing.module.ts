@@ -7,6 +7,7 @@ import { InquiriesComponent } from './inquiries/inquiries.component';
 import { LeasesComponent } from './leases/leases.component';
 import { ShortlistComponent } from './shortlist/shortlist.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
+import { TenantChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
       { path: 'leases', component: LeasesComponent },
       { path: 'shortlist', component: ShortlistComponent },
       { path: 'subscription', component: SubscriptionComponent },
+      { path: 'chat', component: TenantChatComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   }

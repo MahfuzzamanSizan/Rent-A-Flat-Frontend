@@ -1,37 +1,115 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer mode="side" opened class="sidenav">
+
+    <!-- Brand -->
     <div class="brand">
-      <mat-icon>home</mat-icon>
-      <span>RentEase</span>
+      <div class="brand-icon">
+        <mat-icon>home_work</mat-icon>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">RentEase</span>
+        <span class="brand-tagline">Rental Platform</span>
+      </div>
     </div>
-    <div class="role-badge">{{ role }}</div>
-    <mat-nav-list>
-      <a mat-list-item *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="active-link">
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle>{{ item.label }}</span>
+
+    <!-- User Card -->
+    <div class="user-card">
+      <div class="user-avatar">{{ fullName ? fullName.charAt(0).toUpperCase() : '' }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ fullName }}</span>
+        <span class="role-chip role-{{ role.toLowerCase() }}">{{ role }}</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-section">
+      <a mat-list-item
+         *ngFor="let item of navItems"
+         [routerLink]="item.route"
+         routerLinkActive="active-link"
+         class="nav-item">
+        <div class="nav-icon-wrap">
+          <mat-icon>{{ item.icon }}</mat-icon>
+        </div>
+        <span class="nav-label">{{ item.label }}</span>
       </a>
-    </mat-nav-list>
+    </nav>
+
+    <!-- Bottom logout -->
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Sign Out</span>
+      </button>
+    </div>
+
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
-      <span>{{ fullName }}</span>
-      <span class="spacer"></span>
-      <button mat-icon-button routerLink="/admin/broadcast" *ngIf="role === 'ADMIN'">
-        <mat-icon [matBadge]="unreadCount || null" matBadgeColor="warn">notifications</mat-icon>
-      </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <mat-menu #menu>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon> Logout
-        </button>
-      </mat-menu>
-    </mat-toolbar>
+  <mat-sidenav-content class="main-content-wrapper">
 
-    <div class="content">
-      <router-outlet></router-outlet>
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h2 class="page-title">{{ getPageTitle() }}</h2>
+      </div>
+      <div class="topbar-right">
+        <button mat-icon-button class="topbar-btn" (click)="toggleNotifications()" [matTooltip]="'Notifications'">
+          <mat-icon [matBadge]="unreadCount > 0 ? unreadCount : null" matBadgeColor="warn" matBadgeSize="small">
+            notifications_none
+          </mat-icon>
+        </button>
+        <div class="topbar-avatar" [matMenuTriggerFor]="userMenu">
+          {{ fullName ? fullName.charAt(0).toUpperCase() : '' }}
+        </div>
+        <mat-menu #userMenu="matMenu" xPosition="before">
+          <div class="menu-header">
+            <strong>{{ fullName }}</strong>
+            <small>{{ role }}</small>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon> Sign Out
+          </button>
+        </mat-menu>
+      </div>
+    </header>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" *ngIf="showNotifications" (click)="showNotifications = false">
+      <div class="notification-card" (click)="$event.stopPropagation()">
+        <div class="notification-header">
+          <h3>Notifications</h3>
+          <button mat-icon-button (click)="markAllRead()" *ngIf="unreadCount > 0" matTooltip="Mark all read">
+            <mat-icon>done_all</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="loadingNotifications" class="notif-loading">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+        <div *ngIf="!loadingNotifications && notifications.length === 0" class="notif-empty">
+          <mat-icon>notifications_off</mat-icon>
+          <p>No notifications</p>
+        </div>
+        <div class="notif-list" *ngIf="!loadingNotifications">
+          <div *ngFor="let n of notifications"
+               class="notif-item"
+               [class.unread]="!n.read"
+               (click)="markOneRead(n)">
+            <div class="notif-dot" *ngIf="!n.read"></div>
+            <div class="notif-body">
+              <strong>{{ n.title }}</strong>
+              <p>{{ n.body }}</p>
+              <small>{{ n.createdAt | date:'short' }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Page Content -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

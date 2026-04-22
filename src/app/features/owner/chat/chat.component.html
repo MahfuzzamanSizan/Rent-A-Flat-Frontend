@@ -1,0 +1,73 @@
+<div class="chat-page">
+
+  <!-- No Inquiry Selected -->
+  <div *ngIf="!inquiryId" class="no-chat">
+    <div class="no-chat-inner">
+      <div class="no-chat-icon"><mat-icon>chat_bubble_outline</mat-icon></div>
+      <h3>No chat selected</h3>
+      <p>Accept an inquiry to start chatting with the property owner. Open an inquiry and click "Chat" to begin.</p>
+    </div>
+  </div>
+
+  <!-- Chat Window -->
+  <div *ngIf="inquiryId" class="chat-window">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">
+          <mat-icon>apartment</mat-icon>
+        </div>
+        <div>
+          <h3>Property Chat</h3>
+          <span class="online-indicator"><span class="dot"></span> Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-list" #messagesList>
+
+      <div *ngIf="loading" class="messages-loading">
+        <mat-spinner diameter="36"></mat-spinner>
+      </div>
+
+      <div *ngIf="!loading && messages.length === 0" class="messages-empty">
+        <mat-icon>chat</mat-icon>
+        <p>No messages yet. Say hello!</p>
+      </div>
+
+      <div *ngFor="let msg of messages" class="message-row" [class.mine]="isMine(msg)">
+        <div *ngIf="!isMine(msg)" class="msg-avatar">
+          {{ msg.senderName ? msg.senderName.charAt(0).toUpperCase() : '?' }}
+        </div>
+        <div class="bubble-wrap">
+          <span *ngIf="!isMine(msg)" class="sender-name">{{ msg.senderName }}</span>
+          <div class="bubble" [class.mine]="isMine(msg)">
+            {{ msg.content }}
+          </div>
+          <span class="msg-time">{{ msg.sentAt | date:'shortTime' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-bar">
+      <div class="input-wrap">
+        <textarea
+          [(ngModel)]="newMessage"
+          (keydown)="onKeyDown($event)"
+          placeholder="Type a message... (Enter to send)"
+          rows="1"
+          class="chat-input"
+          [disabled]="sending">
+        </textarea>
+        <button class="send-btn" (click)="send()" [disabled]="!newMessage.trim() || sending">
+          <mat-spinner *ngIf="sending" diameter="20"></mat-spinner>
+          <mat-icon *ngIf="!sending">send</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

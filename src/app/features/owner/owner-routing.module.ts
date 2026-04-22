@@ -8,6 +8,7 @@ import { InquiriesComponent } from './inquiries/inquiries.component';
 import { LeasesComponent } from './leases/leases.component';
 import { LeaseFormComponent } from './lease-form/lease-form.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
+import { OwnerChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'leases', component: LeasesComponent },
       { path: 'leases/new', component: LeaseFormComponent },
       { path: 'subscription', component: SubscriptionComponent },
+      { path: 'chat', component: OwnerChatComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

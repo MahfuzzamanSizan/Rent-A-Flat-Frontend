@@ -20,6 +20,10 @@ export class InquiriesComponent implements OnInit {
 
   viewProperty(propertyId: string): void { this.router.navigate(['/tenant/properties', propertyId]); }
 
+  openChat(inq: Inquiry): void {
+    this.router.navigate(['/tenant/chat'], { queryParams: { inquiryId: inq.id } });
+  }
+
   statusColor(s: string): string {
     return { PENDING: 'accent', ACCEPTED: 'primary', REJECTED: 'warn', WITHDRAWN: '' }[s] || '';
   }

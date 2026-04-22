@@ -12,9 +12,10 @@ import { InquiriesComponent } from './inquiries/inquiries.component';
 import { LeasesComponent } from './leases/leases.component';
 import { LeaseFormComponent } from './lease-form/lease-form.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
+import { OwnerChatComponent } from './chat/chat.component';
 
 @NgModule({
-  declarations: [DashboardComponent, PropertiesComponent, PropertyFormComponent, InquiriesComponent, LeasesComponent, LeaseFormComponent, SubscriptionComponent],
+  declarations: [DashboardComponent, PropertiesComponent, PropertyFormComponent, InquiriesComponent, LeasesComponent, LeaseFormComponent, SubscriptionComponent, OwnerChatComponent],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, OwnerRoutingModule, LayoutModule, MaterialModule]
 })
 export class OwnerModule {}

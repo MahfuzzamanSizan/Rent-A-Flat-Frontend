@@ -36,6 +36,9 @@
             <button mat-icon-button color="primary" *ngIf="inq.status === 'PENDING'" (click)="openRespond(inq)" matTooltip="Respond">
               <mat-icon>reply</mat-icon>
             </button>
+            <button mat-icon-button color="accent" *ngIf="inq.status === 'ACCEPTED'" (click)="openChat(inq)" matTooltip="Open Chat">
+              <mat-icon>chat</mat-icon>
+            </button>
           </td>
         </ng-container>
 

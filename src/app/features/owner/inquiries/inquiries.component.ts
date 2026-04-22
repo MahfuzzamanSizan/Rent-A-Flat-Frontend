@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../core/services/api.service';
 import { Inquiry } from '../../../core/models';
@@ -11,7 +12,7 @@ export class InquiriesComponent implements OnInit {
   responseMessage = '';
   columns = ['tenant', 'message', 'status', 'createdAt', 'actions'];
 
-  constructor(private api: ApiService, private snack: MatSnackBar) {}
+  constructor(private api: ApiService, private snack: MatSnackBar, private router: Router) {}
   ngOnInit(): void { this.load(); }
 
   load(): void {
@@ -38,6 +39,10 @@ export class InquiriesComponent implements OnInit {
       next: () => { this.respondingTo = null; this.snack.open('Inquiry rejected', 'OK', { duration: 2000 }); this.load(); },
       error: () => this.snack.open('Failed', 'Close', { duration: 2000 })
     });
+  }
+
+  openChat(inq: Inquiry): void {
+    this.router.navigate(['/owner/chat'], { queryParams: { inquiryId: inq.id } });
   }
 
   statusColor(status: string): string {

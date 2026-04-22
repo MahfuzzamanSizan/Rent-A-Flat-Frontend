@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import {
   UserProfile, Property, Area, Inquiry, Lease, RentPayment,
   Subscription, SubscriptionPlan, Notification, Complaint, Transaction,
-  AdminDashboard, PageResponse, Review
+  AdminDashboard, PageResponse, Review, ChatMessage
 } from '../models';
 
 const API = 'http://localhost:8080/api/v1';
@@ -175,6 +175,23 @@ export class ApiService {
 
   getPropertyReviews(propertyId: string): Observable<Review[]> {
     return this.http.get<Review[]>(`${API}/reviews/property/${propertyId}`);
+  }
+
+  getOwnerReviews(ownerId: string): Observable<Review[]> {
+    return this.http.get<Review[]>(`${API}/reviews/owner/${ownerId}`);
+  }
+
+  // ── Chat ─────────────────────────────────────────────────────────────────────
+  getChatMessages(inquiryId: string): Observable<ChatMessage[]> {
+    return this.http.get<ChatMessage[]>(`${API}/chats/${inquiryId}/messages`);
+  }
+
+  sendChatMessage(inquiryId: string, content: string): Observable<ChatMessage> {
+    return this.http.post<ChatMessage>(`${API}/chats/${inquiryId}/messages`, { content });
+  }
+
+  getChatUnreadCount(inquiryId: string): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${API}/chats/${inquiryId}/unread`);
   }
 
   // ── Admin ─────────────────────────────────────────────────────────────────────

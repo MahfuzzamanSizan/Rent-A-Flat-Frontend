@@ -1,89 +1,148 @@
-<div class="page-container">
-  <!-- Search Filters -->
-  <mat-card class="filter-card">
-    <mat-card-content>
-      <form [formGroup]="filterForm" (ngSubmit)="search()">
-        <div class="filter-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Search keyword</mat-label>
-            <input matInput formControlName="keyword" placeholder="Title, address...">
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
+<div class="home-page">
 
-          <mat-form-field appearance="outline">
-            <mat-label>Area</mat-label>
-            <mat-select formControlName="areaId">
-              <mat-option value="">All Areas</mat-option>
-              <mat-option *ngFor="let a of areas" [value]="a.id">{{ a.areaName }}, {{ a.city }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+  <!-- Hero Search Bar -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Find Your <span class="hero-accent">Dream Home</span></h1>
+      <p>Search from thousands of verified listings across Bangladesh</p>
+    </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Type</mat-label>
-            <mat-select formControlName="propertyType">
-              <mat-option value="">All Types</mat-option>
-              <mat-option *ngFor="let t of propertyTypes" [value]="t">{{ t }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Min Rent (৳)</mat-label>
-            <input matInput type="number" formControlName="minRent">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Max Rent (৳)</mat-label>
-            <input matInput type="number" formControlName="maxRent">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Bedrooms</mat-label>
-            <input matInput type="number" formControlName="bedrooms" min="1">
-          </mat-form-field>
-        </div>
-        <div class="filter-actions">
-          <button mat-stroked-button type="button" (click)="reset()">Reset</button>
-          <button mat-raised-button color="primary" type="submit">Search</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Results -->
-  <div class="results-header">
-    <span>{{ totalElements }} properties found</span>
-  </div>
-
-  <div *ngIf="loading" class="loading"><mat-spinner diameter="48"></mat-spinner></div>
-
-  <div *ngIf="!loading" class="properties-grid">
-    <mat-card *ngFor="let p of properties" class="property-card" (click)="viewDetail(p.id)">
-      <div class="property-image" [style.background-image]="p.photoUrls?.length ? 'url(' + p.photoUrls![0] + ')' : ''">
-        <span *ngIf="!p.photoUrls?.length" class="no-photo"><mat-icon>home</mat-icon></span>
-        <mat-chip class="type-chip">{{ p.propertyType }}</mat-chip>
-        <mat-chip *ngIf="p.boosted" color="accent" class="boost-chip">Boosted</mat-chip>
-      </div>
+    <mat-card class="filter-card">
       <mat-card-content>
-        <h3>{{ p.title }}</h3>
-        <p class="location"><mat-icon>location_on</mat-icon> {{ p.fullAddress || p.areaId }}</p>
-        <div class="property-meta">
-          <span *ngIf="p.bedrooms"><mat-icon>bed</mat-icon> {{ p.bedrooms }} bed</span>
-          <span *ngIf="p.bathrooms"><mat-icon>bathtub</mat-icon> {{ p.bathrooms }} bath</span>
-          <span *ngIf="p.sizeSqft"><mat-icon>square_foot</mat-icon> {{ p.sizeSqft }} sqft</span>
-        </div>
-        <div class="price-row">
-          <span class="price">৳{{ p.rentAmount | number }}/mo</span>
-          <span *ngIf="p.negotiable" class="negotiable">Negotiable</span>
-        </div>
+        <form [formGroup]="filterForm" (ngSubmit)="search()">
+          <div class="filter-grid">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Search by keyword</mat-label>
+              <input matInput formControlName="keyword" placeholder="Title, area, address..." />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Area</mat-label>
+              <mat-select formControlName="areaId">
+                <mat-option value="">All Areas</mat-option>
+                <mat-option *ngFor="let a of areas" [value]="a.id">{{ a.areaName }}, {{ a.city }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Property Type</mat-label>
+              <mat-select formControlName="propertyType">
+                <mat-option value="">All Types</mat-option>
+                <mat-option *ngFor="let t of propertyTypes" [value]="t">{{ t }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Min Rent (৳)</mat-label>
+              <input matInput type="number" formControlName="minRent" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Max Rent (৳)</mat-label>
+              <input matInput type="number" formControlName="maxRent" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Bedrooms</mat-label>
+              <input matInput type="number" formControlName="bedrooms" min="1" />
+            </mat-form-field>
+          </div>
+
+          <div class="filter-actions">
+            <button mat-stroked-button type="button" (click)="reset()" class="reset-btn">
+              <mat-icon>refresh</mat-icon> Reset
+            </button>
+            <button mat-raised-button color="primary" type="submit" class="search-btn">
+              <mat-icon>search</mat-icon> Search Properties
+            </button>
+          </div>
+        </form>
       </mat-card-content>
     </mat-card>
+  </div>
 
-    <div *ngIf="properties.length === 0" class="empty-state">
-      <mat-icon>search_off</mat-icon>
-      <p>No properties found. Try adjusting your filters.</p>
+  <!-- Results Section -->
+  <div class="results-section">
+    <div class="results-header">
+      <div class="results-count">
+        <span *ngIf="!loading">
+          <strong>{{ totalElements }}</strong> properties found
+        </span>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+
+    <!-- Grid -->
+    <div *ngIf="!loading" class="properties-grid">
+
+      <div *ngFor="let p of properties" class="property-card" (click)="viewDetail(p.id)">
+        <!-- Image -->
+        <div class="card-image"
+             [style.background-image]="p.photoUrls?.length ? 'url(' + p.photoUrls![0] + ')' : ''">
+          <div *ngIf="!p.photoUrls?.length" class="no-photo">
+            <mat-icon>apartment</mat-icon>
+          </div>
+          <div class="card-badges">
+            <span class="badge type-badge">{{ p.propertyType }}</span>
+            <span *ngIf="p.boosted" class="badge boost-badge">
+              <mat-icon>bolt</mat-icon> Boosted
+            </span>
+          </div>
+          <div class="card-overlay"></div>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+          <h3 class="card-title">{{ p.title }}</h3>
+          <p class="card-location">
+            <mat-icon>location_on</mat-icon>
+            {{ p.fullAddress || p.areaId }}
+          </p>
+
+          <div class="card-meta">
+            <span *ngIf="p.bedrooms" class="meta-item">
+              <mat-icon>bed</mat-icon> {{ p.bedrooms }}
+            </span>
+            <span *ngIf="p.bathrooms" class="meta-item">
+              <mat-icon>bathtub</mat-icon> {{ p.bathrooms }}
+            </span>
+            <span *ngIf="p.sizeSqft" class="meta-item">
+              <mat-icon>square_foot</mat-icon> {{ p.sizeSqft }} sqft
+            </span>
+          </div>
+
+          <div class="card-footer">
+            <div class="price-block">
+              <span class="price">৳{{ p.rentAmount | number }}</span>
+              <span class="price-unit">/month</span>
+            </div>
+            <span *ngIf="p.negotiable" class="negotiable-tag">Negotiable</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="properties.length === 0" class="empty-state" style="grid-column: 1/-1">
+        <mat-icon>search_off</mat-icon>
+        <h3>No properties found</h3>
+        <p>Try adjusting your search filters</p>
+      </div>
+    </div>
+
+    <!-- Paginator -->
+    <div class="paginator-wrap" *ngIf="totalElements > size">
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="size"
+        [pageSizeOptions]="[12, 24, 48]"
+        (page)="onPage($event)">
+      </mat-paginator>
     </div>
   </div>
 
-  <mat-paginator *ngIf="totalElements > size" [length]="totalElements" [pageSize]="size" [pageSizeOptions]="[12, 24, 48]" (page)="onPage($event)"></mat-paginator>
 </div>
-
