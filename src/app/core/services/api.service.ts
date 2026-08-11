@@ -7,7 +7,8 @@ import {
   AdminDashboard, PageResponse, Review, ChatMessage
 } from '../models';
 
-const API = 'http://localhost:8080/api/v1';
+// const API = 'http://localhost:8080/api/v1';
+const API = 'https://rent-a-flat-6qz5.onrender.com/api/v1';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
